@@ -4,6 +4,8 @@ use std::{
     slice::Chunks,
 };
 
+use serde::{Serialize, Deserialize};
+
 use crate::{
     domains::{EuclideanDomain, Field, Ring},
     printer::MatrixPrinter,
@@ -11,8 +13,10 @@ use crate::{
 
 /// A matrix with entries that are elements of a ring `F`.
 /// A vector can be represented as a matrix with one row or one column.
-#[derive(Clone, Hash, PartialEq, Eq, Debug)]
+#[derive(Clone, Hash, PartialEq, Eq, Debug, Serialize, Deserialize)]
 pub struct Matrix<F: Ring> {
+    #[serde(bound(serialize = "F::Element: Serialize",
+                  deserialize = "F::Element: Deserialize<'de>"))]
     pub(crate) data: Vec<F::Element>,
     pub(crate) nrows: u32,
     pub(crate) ncols: u32,
