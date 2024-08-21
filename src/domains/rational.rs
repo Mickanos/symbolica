@@ -4,6 +4,8 @@ use std::{
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign},
 };
 
+use serde::{Serialize, Deserialize};
+
 use rug::integer::IntegerExt64;
 
 use crate::{
@@ -26,7 +28,7 @@ pub type RationalField = FractionField<IntegerRing>;
 pub const Q: FractionField<IntegerRing> = FractionField::new(Z);
 
 /// The fraction field of `R`.
-#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
 pub struct FractionField<R: Ring> {
     ring: R,
 }
@@ -113,7 +115,7 @@ impl<T: Field> FractionNormalization for T {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
 pub struct Fraction<R: Ring> {
     numerator: R::Element,
     denominator: R::Element,
