@@ -18,6 +18,7 @@ use std::sync::Arc;
 use ahash::HashMap;
 use smallvec::{smallvec, SmallVec};
 use smartstring::{LazyCompact, SmartString};
+use serde::{Serialize,Deserialize};
 
 use crate::atom::{Atom, AtomView, Symbol};
 use crate::coefficient::{Coefficient, CoefficientView, ConvertToRing};
@@ -53,6 +54,8 @@ pub trait Exponent:
     + Copy
     + PartialEq
     + Eq
+    + Serialize
+    + for <'de> Deserialize<'de>
 {
     fn zero() -> Self;
     fn one() -> Self;
@@ -294,12 +297,12 @@ impl Exponent for u8 {
 }
 
 /// A well-order of monomials.
-pub trait MonomialOrder: Clone {
+pub trait MonomialOrder: Clone + Serialize + for <'de> Deserialize<'de> {
     fn cmp<E: Exponent>(a: &[E], b: &[E]) -> Ordering;
 }
 
 /// Graded reverse lexicographic ordering of monomials.
-#[derive(Clone)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct GrevLexOrder {}
 
 impl MonomialOrder for GrevLexOrder {
@@ -329,7 +332,7 @@ impl MonomialOrder for GrevLexOrder {
 }
 
 /// Lexicographic ordering of monomials.
-#[derive(Clone)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct LexOrder {}
 
 impl MonomialOrder for LexOrder {
@@ -342,7 +345,7 @@ impl MonomialOrder for LexOrder {
 /// A polynomial variable. It is either a (global) symbol
 /// a temporary variable (for internal use), an array entry,
 /// a function or any other non-polynomial part.
-#[derive(Clone, Hash, PartialEq, Eq, Debug)]
+#[derive(Clone, Hash, PartialEq, Eq, Debug, Serialize, Deserialize)]
 pub enum Variable {
     Symbol(Symbol),
     Temporary(usize), // a temporary variable, for internal use

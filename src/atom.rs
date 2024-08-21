@@ -17,10 +17,12 @@ pub use self::representation::{
 };
 use self::representation::{FunView, RawAtom};
 
+use serde::{Serialize, Deserialize};
+
 /// A symbol, for example the name of a variable or the name of a function,
 /// together with its properties.
 /// Should be created using `get_symbol` of `State`.
-#[derive(Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct Symbol {
     id: u32,
     wildcard_level: u8,
@@ -448,7 +450,7 @@ impl<'a> AtomView<'a> {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Serialize, Deserialize)]
 pub enum Atom {
     Num(Num),
     Var(Var),

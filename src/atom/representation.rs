@@ -1,5 +1,6 @@
 use byteorder::{LittleEndian, WriteBytesExt};
 use bytes::{Buf, BufMut};
+use serde::{Serialize, Deserialize};
 use std::{
     cmp::Ordering,
     io::{Read, Write},
@@ -183,7 +184,7 @@ impl Atom {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Num {
     data: RawAtom,
 }
@@ -275,7 +276,7 @@ impl Num {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Var {
     data: RawAtom,
 }
@@ -359,7 +360,7 @@ impl Var {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Fun {
     data: RawAtom,
 }
@@ -509,7 +510,7 @@ impl Fun {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Pow {
     data: RawAtom,
 }
@@ -573,7 +574,7 @@ impl Pow {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Mul {
     data: RawAtom,
 }
@@ -761,7 +762,7 @@ impl Mul {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Add {
     data: RawAtom,
 }

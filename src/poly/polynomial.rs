@@ -18,11 +18,12 @@ use super::gcd::PolynomialGCD;
 use super::univariate::UnivariatePolynomial;
 use super::{Exponent, LexOrder, MonomialOrder, Variable, INLINED_EXPONENTS};
 use smallvec::{smallvec, SmallVec};
+use serde::{Serialize, Deserialize};
 
 const MAX_DENSE_MUL_BUFFER_SIZE: usize = 1 << 24;
 thread_local! { static DENSE_MUL_BUFFER: Cell<Vec<u32>> = const { Cell::new(Vec::new()) }; }
 
-#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
 pub struct PolynomialRing<R: Ring, E: Exponent> {
     pub(crate) ring: R,
     _phantom_exp: PhantomData<E>,
@@ -196,11 +197,13 @@ impl<R: EuclideanDomain + PolynomialGCD<E>, E: Exponent> EuclideanDomain for Pol
 }
 
 /// Multivariate polynomial with a sparse degree and dense variable representation.
-#[derive(Clone)]
-pub struct MultivariatePolynomial<F: Ring, E: Exponent = u16, O: MonomialOrder = LexOrder> {
+#[derive(Clone, Serialize, Deserialize)]
+pub struct MultivariatePolynomial<F: Ring, E = u16, O: MonomialOrder = LexOrder> {
     // Data format: the i-th monomial is stored as coefficients[i] and
     // exponents[i * nvars .. (i + 1) * nvars]. Terms are always expanded and sorted by the exponents via
     // cmp_exponents().
+    #[serde(bound(serialize = "F::Element: Serialize",
+                  deserialize = "F::Element: Deserialize<'de>"))]
     pub coefficients: Vec<F::Element>,
     pub exponents: Vec<E>,
     /// The coefficient ring.
