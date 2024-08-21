@@ -5,6 +5,8 @@ use std::{
     str::FromStr,
 };
 
+use serde::{Serialize, Deserialize};
+
 use rand::Rng;
 use rug::{
     integer::IntegerExt64,
@@ -37,7 +39,7 @@ pub type Z = IntegerRing;
 pub const Z: IntegerRing = IntegerRing::new();
 
 /// The integer ring.
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug, Serialize, Deserialize)]
 pub struct IntegerRing;
 
 impl Default for IntegerRing {
@@ -52,7 +54,7 @@ impl IntegerRing {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Integer {
     Natural(i64),
     Double(i128),
