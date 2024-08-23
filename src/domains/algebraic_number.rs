@@ -2,6 +2,8 @@ use std::sync::Arc;
 
 use rand::Rng;
 
+use serde::{Serialize, Deserialize};
+
 use crate::{
     coefficient::ConvertToRing,
     combinatorics::CombinationIterator,
@@ -23,8 +25,10 @@ use super::{
 
 /// An algebraic number ring, with a monic, irreducible defining polynomial.
 // TODO: make special case for degree two and three and hardcode the multiplication table
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct AlgebraicExtension<R: Ring> {
+    #[serde(bound(serialize = "R: Serialize, R::Element: Serialize",
+                  deserialize = "R: Deserialize<'de>, R::Element: Deserialize<'de>"))]
     poly: Arc<MultivariatePolynomial<R, u16>>, // TODO: convert to univariate polynomial
 }
 
@@ -329,8 +333,10 @@ impl<R: Ring> std::fmt::Display for AlgebraicExtension<R> {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct AlgebraicNumber<R: Ring> {
+    #[serde(bound(serialize = "R: Serialize, R::Element: Serialize",
+                  deserialize = "R: Deserialize<'de>, R::Element: Deserialize<'de>"))]
     pub(crate) poly: MultivariatePolynomial<R, u16>,
 }
 
